@@ -4,8 +4,8 @@ class NormaAEB43File
   DATE_SEPARATOR = '-'
   LINE_START = {
     '1120' => :headers,
-    '22  ' => :extract_date_and_amount,
-    '2301' => :extract_concept,
+    '22  ' => :date_and_amount,
+    '2301' => :concept,
     '2302' => :worthless_line,
     '2303' => :worthless_line,
     '3320' => :worthless_line,
@@ -33,14 +33,13 @@ class NormaAEB43File
     'DATE,AMOUNT,CONCEPT'
   end
 
-  def extract_date_and_amount
-    date = parse_date
-    amount = parse_amount
-    END_OF_LINE + date + FIELD_SEPARATOR + amount + FIELD_SEPARATOR
+  def date_and_amount
+    END_OF_LINE + parse_date + FIELD_SEPARATOR + parse_amount + FIELD_SEPARATOR
   end
 
-  def extract_concept
-    format_text(@line[4..76])
+  def concept
+    raw_concept = @line[4..76]
+    format_text(raw_concept)
   end
 
   def worthless_line
